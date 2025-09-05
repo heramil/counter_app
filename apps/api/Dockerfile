@@ -1,4 +1,4 @@
-# --- Composer deps layer ---
+# 1) Composer deps
 FROM composer:2 AS vendor
 WORKDIR /app
 COPY composer.json composer.lock ./
@@ -6,19 +6,24 @@ RUN composer install --no-dev --no-interaction --prefer-dist
 COPY . .
 RUN composer install --no-dev --no-interaction --prefer-dist
 
-# --- Runtime image: Nginx + PHP-FPM 8.3 ---
-FROM ghcr.io/renderinc/nginx-php-fpm:8.3
+# 2) Runtime: public PHP + Nginx image
+FROM webdevops/php-nginx:8.3
 WORKDIR /var/www/html
 
-# copy app
+# Laravel public dir
+ENV WEB_DOCUMENT_ROOT=/var/www/html/public
+
+# IMPORTANT: listen on Render's port
+ENV WEB_HTTP_PORT=10000
+EXPOSE 10000
+
+# Copy app from composer stage
 COPY --from=vendor /app /var/www/html
 
-# Laravel storage/cache permissions
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+# Permissions
+RUN chown -R application:application /var/www/html/storage /var/www/html/bootstrap/cache
 
-# boot script to optimize & migrate
+# Start script (optional if you have one)
 COPY ./render-deploy.sh /usr/local/bin/render-deploy.sh
 RUN chmod +x /usr/local/bin/render-deploy.sh
-
-EXPOSE 10000
-CMD ["bash", "-lc", "render-deploy.sh && /usr/local/bin/start"]
+CMD ["bash", "-lc", "render-deploy.sh && /usr/bin/supervisord -n"]
