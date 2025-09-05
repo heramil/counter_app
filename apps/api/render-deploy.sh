@@ -1,13 +1,19 @@
 #!/usr/bin/env bash
 set -e
 
-echo "Composer optimize..."
-composer install --no-dev --prefer-dist --no-interaction || true
+echo "=== Laravel deploy steps ==="
 
-php artisan key:generate --force || true
+# Clear caches to avoid stale config
+php artisan config:clear || true
+php artisan route:clear || true
+php artisan cache:clear || true
+
+# Run migrations (ok if there are none)
+php artisan migrate --force || true
+
+# Optimize caches
 php artisan config:cache
 php artisan route:cache
-php artisan view:cache
+php artisan view:cache || true
 
-echo "Run migrations..."
-php artisan migrate --force
+echo "=== Deploy steps done ==="
