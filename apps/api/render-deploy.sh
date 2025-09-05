@@ -1,19 +1,14 @@
 #!/usr/bin/env bash
 set -e
 
-echo "=== Laravel deploy steps ==="
+echo "Running Laravel deploy steps..."
 
-# Clear caches to avoid stale config
-php artisan config:clear || true
-php artisan route:clear || true
-php artisan cache:clear || true
+# Run migrations
+php artisan migrate --force
 
-# Run migrations (ok if there are none)
-php artisan migrate --force || true
-
-# Optimize caches
+# Cache config, routes, views
 php artisan config:cache
 php artisan route:cache
-php artisan view:cache || true
+php artisan view:cache
 
-echo "=== Deploy steps done ==="
+echo "Laravel deploy finished."
