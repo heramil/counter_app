@@ -1,0 +1,14 @@
+# Node / Vite
+apps/web/node_modules
+apps/web/dist
+
+# PHP / Laravel
+apps/api/vendor
+apps/api/storage/*.key
+apps/api/storage/logs/*
+apps/api/.env
+
+# macOS
+.DS_Store
+
+# Docker volumes (kept external)

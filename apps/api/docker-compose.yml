@@ -1,0 +1,15 @@
+version: "3.9"
+services:
+  db:
+    image: postgres:17.6
+    container_name: counter_pg
+    environment:
+      POSTGRES_USER: counter_user
+      POSTGRES_PASSWORD: counter_pass
+      POSTGRES_DB: counter_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+volumes:
+  pgdata:

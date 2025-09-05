@@ -1,0 +1,11 @@
+@import "tailwindcss";
+@source "../index.html";
+@source "../**/*.{html,vue,js,ts,jsx,tsx}";
+
+/* Design tokens */
+@theme {
+  --font-sans: ui-sans-serif, system-ui, Inter, "SF Pro", "Helvetica Neue", Arial;
+  --radius-card: 1.25rem;
+  --ring-strong: 0 0 0 3px rgba(99,102,241,.45); /* indigo-500/45 */
+  --shadow-card: 0 10px 30px rgba(2,6,23,.35);  /* slate-950/35 */
+}
