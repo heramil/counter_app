@@ -4,32 +4,30 @@ services:
     name: counter-api
     env: docker
     rootDir: apps/api
-    dockerfilePath: apps/api/Dockerfile
+    # Dockerfile will be discovered at apps/api/Dockerfile automatically.
     autoDeploy: true
     healthCheckPath: /up
     envVars:
       - key: APP_ENV
         value: production
       - key: APP_KEY
-        sync: false               # set in dashboard (see 4.6)
+        sync: false               # set in dashboard after first create
       - key: DB_CONNECTION
         value: pgsql
-      # Let Laravel parse DATABASE_URL from the managed DB:
       - key: DATABASE_URL
         fromDatabase:
           name: counter-db
           property: connectionString
 
   # === Vue Static Site ===
-  - type: static
+  - type: static_site
     name: counter-web
     rootDir: apps/web
     buildCommand: npm ci && npm run build
     publishPath: dist
     envVars:
-      # update to the live API URL *after* first API deploy
       - key: VITE_API_URL
-        value: https://REPLACE_ME/api
+        value: https://REPLACE_ME/api  # update after API URL is known
 
 databases:
   - name: counter-db
