@@ -1,5 +1,4 @@
 services:
-  # === Laravel API (Docker Web Service) ===
   - type: web
     name: counter-api
     runtime: docker
@@ -7,19 +6,19 @@ services:
     dockerfilePath: apps/api/Dockerfile
     healthCheckPath: /up
     autoDeployTrigger: commit
+    preDeployCommand: /usr/local/bin/render-deploy.sh   # ← run migrations & caches here
     envVars:
       - key: APP_ENV
         value: production
       - key: APP_KEY
-        sync: false            # set in dashboard on first create
+        sync: false
       - key: DB_CONNECTION
         value: pgsql
       - key: DATABASE_URL
         fromDatabase:
           name: counter-db
-          property: connectionString  # Render injects full postgres URL
+          property: connectionString
 
-  # === Vue Static Site ===
   - type: web
     name: counter-web
     runtime: static
@@ -28,7 +27,7 @@ services:
     staticPublishPath: dist
     envVars:
       - key: VITE_API_URL
-        value: https://REPLACE_ME/api  # update after API URL is known
+        value: https://REPLACE_WITH_COUNTER_API_HOST/api
 
 databases:
   - name: counter-db

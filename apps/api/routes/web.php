@@ -2,4 +2,4 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', fn() => 'Laravel API up');
+Route::get('/up', fn() => response()->json(['ok' => true]));
