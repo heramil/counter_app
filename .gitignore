@@ -24,3 +24,6 @@ apps/web/node_modules/
 apps/web/dist/
 apps/web/.vite/
 apps/web/.cache/
+
+/node_modules/
+**/node_modules/
